@@ -16,7 +16,7 @@ const productService = {
     }
     for (let i = 0; i < data.length; i++) {
       if (data[i].image_url) {
-        data[i].image_url = supabase.storage.from('product-images').getPublicUrl(data[i].image_url).data.publicUrl;
+        data[i].image_url = supabase.storage.from('products').getPublicUrl(data[i].image_url).data.publicUrl;
       } else {
         data.image_url = indisponivel3x2;
       }
@@ -84,7 +84,7 @@ const productService = {
       const fileExt = file.name.split('.').pop();
       const fileName = `${crypto.randomUUID()}.${fileExt}`;
       const { error: upErr } = await supabase.storage
-        .from('product-images')
+        .from('products')
         .upload(fileName, file);
       if (upErr) throw upErr;
       image_url = fileName;
