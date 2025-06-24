@@ -92,9 +92,8 @@ const AdminProductsPage = () => {
                             src={product.image_url}
                             alt={product.title}
                             className="rounded"
-                            style={{ width: 'auto', height: '60px', }}                            onError={(e) => {
-                              e.target.src = 'data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="60" height="60" fill="%23F8F9FA" stroke="%23D1D5DB"/%3E%3Ctext x="30" y="40" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="%236B7380"%3E?%3C/text%3E%3C/svg%3E';
-                            }}/>
+                            style={{ width: 'auto', height: '60px', }} onError={(e) => { 
+                              e.target.src = 'https://placehold.co/80x80?text=?';}} />
                         </td>
                         <td>{product.title}</td>
                         <td className="one-line-cell">{formatPrice(product.price)}</td>
