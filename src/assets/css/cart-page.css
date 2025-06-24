@@ -1,0 +1,55 @@
+/* src/assets/css/cart-page.css */
+
+/* Transição suave para atualização de itens */
+.table tbody tr {
+  transition: opacity 0.3s ease;
+}
+
+/* Desabilitar seleção de texto nos botões de quantidade */
+.input-group button {
+  user-select: none;
+}
+
+/* Hover mais suave no botão de remover */
+.btn-link.text-danger:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+/* Cursor de loading quando item está sendo atualizado */
+.table tbody tr[data-updating="true"] {
+  cursor: wait;
+}
+
+/* Animação de pulse no input de quantidade quando atualizado */
+@keyframes quantityPulse {
+  0% {
+    background-color: #f8f9fa;
+  }
+  50% {
+    background-color: #e9ecef;
+  }
+  100% {
+    background-color: #f8f9fa;
+  }
+}
+
+.quantity-updating {
+  animation: quantityPulse 0.5s ease;
+}
+
+/* Responsividade da tabela */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .table td {
+    padding: 0.5rem;
+  }
+  
+  .input-group {
+    width: 100px !important;
+  }
+}

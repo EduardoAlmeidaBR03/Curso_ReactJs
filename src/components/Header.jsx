@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@contexts/AuthContext';
 import authService from '@services/authService';
 import profileService from '@services/profileService';
+import CartDropdown from '@components/CartDropdown';
 import avatar40 from '@assets/img/avatar40x40.svg';
 
-const Header = ({ cartCount = 0 }) => {
+const Header = ({ cartCount = 0, onCartUpdate }) => {
   const { user, isAdmin } = useAuth();
   const [avatarUrl, setAvatarUrl] = useState(avatar40);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [cartHoverTimeout, setCartHoverTimeout] = useState(null);
+
   useEffect(() => {
     if (user) {
       const fetchProfile = async () => {
@@ -27,6 +31,34 @@ const Header = ({ cartCount = 0 }) => {
       setAvatarUrl(avatar40);
     }
   }, [user]);
+
+  const handleCartMouseEnter = () => {
+    // Limpar timeout anterior se existir
+    if (cartHoverTimeout) {
+      clearTimeout(cartHoverTimeout);
+      setCartHoverTimeout(null);
+    }
+    // Mostrar dropdown apenas se usuário estiver logado
+    if (user) {
+      setShowCartDropdown(true);
+    }
+  };
+
+  const handleCartMouseLeave = () => {
+    // Adicionar um pequeno delay antes de fechar para melhorar UX
+    const timeout = setTimeout(() => {
+      setShowCartDropdown(false);
+    }, 300);
+    setCartHoverTimeout(timeout);
+  };
+
+  const handleDropdownMouseEnter = () => {
+    // Cancelar fechamento se mouse entrar no dropdown
+    if (cartHoverTimeout) {
+      clearTimeout(cartHoverTimeout);
+      setCartHoverTimeout(null);
+    }
+  };
 
   return (
     <>
@@ -51,10 +83,29 @@ const Header = ({ cartCount = 0 }) => {
               <a className="nav-link" href="/contact">Contato</a>
             </div>
             <div className="d-flex gap-3 ms-auto text-end align-items-center">
-              <span className="navbar-text position-relative">
-                <i className="bi-cart fs-3"></i>
-                <span className="badge bg-danger rounded-pill position-absolute top-0 start-50">{cartCount}</span>
-              </span>
+              <div 
+                className="position-relative"
+                onMouseEnter={handleCartMouseEnter}
+                onMouseLeave={handleCartMouseLeave}
+              >
+                <span className="navbar-text position-relative" style={{ cursor: 'pointer' }}>
+                  <i className="bi-cart fs-3"></i>
+                  {cartCount > 0 && (
+                    <span className="badge bg-danger rounded-pill position-absolute top-0 start-50">
+                      {cartCount}
+                    </span>
+                  )}
+                </span>
+                {user && (
+                  <div onMouseEnter={handleDropdownMouseEnter}>
+                    <CartDropdown 
+                      isOpen={showCartDropdown}
+                      onClose={() => setShowCartDropdown(false)}
+                      onCartUpdate={onCartUpdate}
+                    />
+                  </div>
+                )}
+              </div>
               {user ? (
                 <div className="dropdown text-end d-flex align-items-center">
                   <a className="text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
